@@ -1,26 +1,19 @@
-version: '3'
+version: '3.8'
 
 services:
   app:
-    build: .
-    expose:
-      - "3000"
+    image: ${DOCKER_USERNAME}/next-logo-gen:latest
+    container_name: next-logo-gen
+    ports:
+      - "3000:3000"
     environment:
-      - NODE_ENV=production
       - NEBIUS_API_KEY=${NEBIUS_API_KEY}
-    restart: unless-stopped
+    restart: always
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 30s
-      timeout: 5s
+      timeout: 10s
       retries: 3
-      start_period: 10s
-    deploy:
-      resources:
-        limits:
-          memory: 500M
-        reservations:
-          memory: 200M
 
   nginx:
     image: nginx:1.24

@@ -39,6 +39,12 @@ jobs:
           script: |
             echo "NEBIUS_API_KEY=${{ secrets.NEBIUS_API_KEY }}" > .env
             docker pull ${{ secrets.DOCKER_USERNAME }}/next-logo-gen:latest
-            docker compose down
+            docker compose down || true
             docker compose up -d
+            # Verify container is running
+            if ! docker ps | grep next-logo-gen; then
+              echo "Container failed to start. Checking logs..."
+              docker compose logs
+              exit 1
+            fi
             docker image prune -f
