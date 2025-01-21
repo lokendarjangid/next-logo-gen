@@ -37,11 +37,40 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.SSH_KEY }}
           script: |
+            # Create deployment directory if it doesn't exist
+            mkdir -p ~/next-logo-gen
+            cd ~/next-logo-gen
+
+            # Create docker-compose.yml
+            cat > docker-compose.yml <<EOL
+            version: '3.8'
+            services:
+              app:
+                image: ${{ secrets.DOCKER_USERNAME }}/next-logo-gen:latest
+                container_name: next-logo-gen
+                ports:
+                  - "3000:3000"
+                environment:
+                  - NEBIUS_API_KEY=\${NEBIUS_API_KEY}
+                restart: always
+            EOL
+
+            # Create .env file
             echo "NEBIUS_API_KEY=${{ secrets.NEBIUS_API_KEY }}" > .env
+
+            # Verify files exist
+            if [ ! -f docker-compose.yml ]; then
+              echo "docker-compose.yml is missing!"
+              exit 1
+            fi
+
+            # Pull and deploy
             docker pull ${{ secrets.DOCKER_USERNAME }}/next-logo-gen:latest
             docker compose down || true
             docker compose up -d
+
             # Verify container is running
+            sleep 10
             if ! docker ps | grep next-logo-gen; then
               echo "Container failed to start. Checking logs..."
               docker compose logs
