@@ -35,7 +35,7 @@ jobs:
         with:
           host: ${{ secrets.IP_ADDRESS }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_KEY }}
           script: |
             echo "NEBIUS_API_KEY=${{ secrets.NEBIUS_API_KEY }}" > .env
             docker pull ${{ secrets.DOCKER_USERNAME }}/next-logo-gen:latest
