@@ -96,7 +96,7 @@ const LogoGenerator = () => {
         <div className="w-full max-w-2xl mx-auto backdrop-blur-sm bg-white/95 p-4 sm:p-6 md:p-8 border border-gray-200/50 rounded-xl md:rounded-2xl shadow-xl">
             <div className="mb-6 md:mb-8">
                 <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Logo Generator</h2>
-                <p className="text-sm md:text-base text-gray-600 mt-2">Create unique logos powered by AI & ML</p>
+                <p className="text-sm md:text-base text-gray-600 mt-2">Create unique logos powered by AI</p>
             </div>
             <div className="space-y-6 md:space-y-8">
                 <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
