@@ -26,7 +26,7 @@ jobs:
           host: ${{ secrets.IP_ADDRESS }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.SSH_KEY }}
-          source: "docker-compose.yml nginx.conf"
+          source: "docker-compose.yml,nginx.conf"
           target: "~/next-logo-gen"
 
       - name: Deploy to server
