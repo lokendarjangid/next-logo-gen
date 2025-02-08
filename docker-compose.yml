@@ -1,6 +1,6 @@
 services:
   app:
-    image: ${DOCKER_IMAGE}
+    image: ghcr.io/lokendarjangid/next-logo-gen:latest
     container_name: next-logo-gen
     ports:
       - "80:3000"
