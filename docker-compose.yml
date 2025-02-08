@@ -15,33 +15,15 @@ services:
       - app
     networks:
       - app_network
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
 
   app:
     image: ghcr.io/lokendarjangid/next-logo-gen:latest
     container_name: next-logo-gen
-    restart: unless-stopped
+    restart: always
     environment:
       - NEBIUS_API_KEY=${NEBIUS_API_KEY}
     networks:
       - app_network
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 512M
 
 networks:
   app_network:
