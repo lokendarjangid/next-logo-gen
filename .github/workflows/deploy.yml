@@ -18,7 +18,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr.io/${{ secrets.DOCKER_USERNAME }}/next-logo-gen:latest
+          tags: ghcr.io/${{ github.repository_owner }}/next-logo-gen:latest
 
       - name: Copy docker-compose.yml to server
         uses: appleboy/scp-action@master
