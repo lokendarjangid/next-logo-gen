@@ -41,3 +41,4 @@ jobs:
             echo "NEBIUS_API_KEY=${{ secrets.NEBIUS_API_KEY }}" >> .env
             docker compose pull
             docker compose up -d --remove-orphans
+            docker image prune -f
