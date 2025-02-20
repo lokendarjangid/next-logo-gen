@@ -26,7 +26,6 @@ services:
 
   app:
     image: ghcr.io/lokendarjangid/next-logo-gen:latest
-    container_name: next-logo-gen
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.next-logo-gen.rule=Host(`ailogo.lokendarjangid.tech`)"
@@ -42,6 +41,9 @@ services:
     restart: always
     environment:
       - NEBIUS_API_KEY=${NEBIUS_API_KEY}
+    deploy:
+      mode: replicated
+      replicas: 2
     networks:
       - app_network
 
