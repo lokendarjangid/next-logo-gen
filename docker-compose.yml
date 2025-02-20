@@ -1,24 +1,44 @@
-version: '3.8'
-
 services:
-  nginx:
-    image: nginx:alpine
-    container_name: nginx_server
-    restart: unless-stopped
+  traefik:
+    image: "traefik:v3.3"
+    container_name: "traefik"
+    command:
+      # - "--log.level=DEBUG"
+      # - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=lokendarjangid1234@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"
       - "443:443"
+      # - "8080:8080"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./logs:/var/log/nginx
-    depends_on:
-      - app
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
     networks:
       - app_network
+    depends_on:
+      - app
 
   app:
     image: ghcr.io/lokendarjangid/next-logo-gen:latest
     container_name: next-logo-gen
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.next-logo-gen.rule=Host(`ailogo.lokendarjangid.tech`)"
+      - "traefik.http.routers.next-logo-gen.entrypoints=websecure"
+      - "traefik.http.routers.next-logo-gen.tls=true"
+      - "traefik.http.routers.next-logo-gen.tls.certresolver=myresolver"
+      - "traefik.http.services.next-logo-gen.loadbalancer.server.port=3000"
+      # Redirect HTTP to HTTPS
+      - "traefik.http.routers.next-logo-gen-http.rule=Host(`ailogo.lokendarjangid.tech`)"
+      - "traefik.http.routers.next-logo-gen-http.entrypoints=web"
+      - "traefik.http.routers.next-logo-gen-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
     restart: always
     environment:
       - NEBIUS_API_KEY=${NEBIUS_API_KEY}
